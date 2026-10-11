@@ -3,6 +3,7 @@ Uso (desde la raíz del proyecto):  python -m scripts.probar_validaciones TU-COD
 """
 import json
 import sys
+from datetime import datetime, timezone
 
 from app.database.connection import SessionLocal
 import app.models  # noqa: F401
@@ -31,10 +32,11 @@ casos = {
     "Extra. Valor fuera de rango": payload(value=float(sm.valor_maximo) + 1000),
 }
 
-antes = db.query(Medicion).count()
+FILTRO = Medicion.timestamp_utc == datetime(2026, 10, 9, 15, 0, 0, tzinfo=timezone.utc)
+antes = db.query(Medicion).filter(FILTRO).count()
 for nombre, raw in casos.items():
     ok, motivo = procesar_payload(db, raw)
     print(f"{nombre}\n  entrada : {raw}\n  resultado: {'ACEPTADO' if ok else 'RECHAZADO'} -> {motivo}\n")
-despues = db.query(Medicion).count()
+despues = db.query(Medicion).filter(FILTRO).count()
 print(f"Mediciones antes: {antes} | después: {despues} | {'OK, no se guardó nada' if antes == despues else 'ERROR: se guardó algo'}")
 db.close()

@@ -1,0 +1,25 @@
+﻿3. Sensor inexistente
+  entrada : {"sensor_id": "NO-EXISTE-999", "timestamp": "2026-10-09T15:00:00Z", "measurements": {"humidity": {"value": 0.0, "unit": "%"}}}
+  resultado: RECHAZADO -> Sensor inexistente: 'NO-EXISTE-999'
+
+4. Unidad incorrecta
+  entrada : {"sensor_id": "GAS-008", "timestamp": "2026-10-09T15:00:00Z", "measurements": {"humidity": {"value": 0.0, "unit": "UNIDAD_MALA"}}}
+  resultado: RECHAZADO -> Unidad incorrecta en 'humidity': recibida 'UNIDAD_MALA', esperada '%'
+
+5. Tipo de dato incorrecto
+  entrada : {"sensor_id": "GAS-008", "timestamp": "2026-10-09T15:00:00Z", "measurements": {"humidity": {"value": "abc", "unit": "%"}}}
+  resultado: RECHAZADO -> Estructura invßlida -> measurements.humidity.value.int: Input should be a valid integer; measurements.humidity.value.float: Input should be a valid number
+
+6. Magnitud incorrecta
+  entrada : {"sensor_id": "GAS-008", "timestamp": "2026-10-09T15:00:00Z", "measurements": {"magnitud_falsa": {"value": 0.0, "unit": "%"}}}
+  resultado: RECHAZADO -> Magnitud 'magnitud_falsa' no pertenece al sensor 'GAS-008'
+
+7. Timestamp invßlido
+  entrada : {"sensor_id": "GAS-008", "timestamp": "ayer por la tarde", "measurements": {"humidity": {"value": 0.0, "unit": "%"}}}
+  resultado: RECHAZADO -> Estructura invßlida -> timestamp: Value error, formato de timestamp invßlido (se espera ISO 8601)
+
+Extra. Valor fuera de rango
+  entrada : {"sensor_id": "GAS-008", "timestamp": "2026-10-09T15:00:00Z", "measurements": {"humidity": {"value": 1100.0, "unit": "%"}}}
+  resultado: RECHAZADO -> Valor fuera de rango en 'humidity': 1100.0 (permitido 0.0000 a 100.0000)
+
+Mediciones antes: 0 | despuÚs: 0 | OK, no se guard¾ nada
